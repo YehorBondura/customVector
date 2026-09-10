@@ -1,0 +1,156 @@
+
+#include <iostream>
+#include "menuOfVector.h"
+
+class customVector
+{
+public:
+
+	int getMemory() const { return memory; }
+	int setMemory(int newMemory) { memory = newMemory; }
+
+	customVector(int startmemory)
+	{
+		memory = startmemory;
+		dinamicArray = nullptr;
+		if (memory > 0)
+		{
+			dinamicArray = new int[memory];
+		}
+	}
+	customVector()
+	{
+		
+	}
+	~customVector()
+	{
+		delete[] dinamicArray;
+		dinamicArray = nullptr;
+		memory = 0;
+	}
+
+	void resize(int newSize)
+	{
+		memory = newSize;
+		int* dinamicArrayTemp;
+		if (newSize > 0)
+		{
+			dinamicArrayTemp = new int[memory];
+			for (int v = 0; v < memory; v++)
+			{
+				dinamicArrayTemp[v] = dinamicArray[v];
+			}
+		}
+		else 
+		{
+			dinamicArrayTemp = nullptr;
+		}
+		delete[] dinamicArray;
+		dinamicArray = nullptr;
+		dinamicArray = dinamicArrayTemp;
+	}
+
+	void setElement(int index, int value)
+	{
+		if (index >= 0 && index < memory && dinamicArray != nullptr)
+		{
+			dinamicArray[index] = value;
+		}
+		else
+		{
+			std::cout << "Index out of bounds!" << std::endl;
+		}
+	}
+	int getElement(int index) const
+	{
+		if (index >= 0 && index < memory && dinamicArray != nullptr)
+		{
+			return dinamicArray[index];
+		}
+		else
+		{
+			std::cout << "Index out of bounds!" << std::endl;
+			return -1;
+		}
+	}
+private:
+	int memory;
+	int* dinamicArray = nullptr;
+};
+
+
+int main()
+{
+	int sizeOfVector = 1;
+	int input;
+	customVector vec(sizeOfVector);
+	while (true)
+	{
+		printMainMenu();
+		std::cin >> input;
+		switch (input)
+		{
+			case 1:
+			{
+				printCreateVectorMenu();
+				int data;
+				std::cin >> sizeOfVector;
+				vec.resize(sizeOfVector);
+				std::cout << "Enter the data to the vector: " << std::endl;
+				for (int i = 0; i < sizeOfVector; i++)
+				{
+					std::cin >> data;
+					vec.setElement(i, data);
+				}
+				break;
+			}
+			case 2:
+			{
+				std::cout << "Memory allocated for vector: " << vec.getMemory() << std::endl;
+				std::cout << "Vector data: " << std::endl;
+				for (int i = 0; i < vec.getMemory(); i++)
+				{
+					std::cout << vec.getElement(i) << std::endl;
+				}
+				break;
+			}
+			case 3:
+			{
+				int input2;
+				printChangeDataMenu();
+				std::cin >> input2;
+				switch (input2)
+				{
+					case 1:
+					{
+						int newSize;
+						std::cout << "Enter new size of vector: ";
+						std::cin >> newSize;
+						vec.resize(newSize);
+						break;
+					}
+					case 2:
+					{
+						int index, value;
+						std::cout << "Enter index of element to change: ";
+						std::cin >> index;
+						std::cout << "Enter new value: ";
+						std::cin >> value;
+						vec.setElement(index, value);
+						break;
+					}
+					case 3:
+					{
+						break;
+					}
+				}
+				break;		
+			}
+			case 4:
+			{
+				return 0;
+			}
+		}
+	}
+	return 0;
+}
