@@ -29,6 +29,11 @@ public:
 		memory = 0;
 	}
 
+	explicit operator bool() const
+	{
+		return memory > 0;
+	}
+
 	void resize(int newSize)
 	{
 		memory = newSize;
