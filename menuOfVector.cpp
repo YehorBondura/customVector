@@ -19,6 +19,13 @@ void printCreateVectorMenu()
 	std::cout << std::endl;
 }
 
+void printChoseVectorTypeMenu()
+{
+	std::cout << "\nChoose vector type:" << std::endl;
+	std::cout << "1. int" << std::endl;
+	std::cout << "2. double" << std::endl;
+	std::cout << "3. Back to main menu" << std::endl;
+}
 
 void printChangeDataMenu()
 {
