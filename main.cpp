@@ -1,163 +1,8 @@
 
 #include <iostream>
 #include "menuOfVector.h"
+#include "vector.h"
 
-template <typename T>
-class customVector
-{
-public:
-	int getMemory() const { return memory; }
-
-	customVector() : dinamicArray(nullptr), memory(0) {}
-	customVector(size_t initialSize) : memory (initialSize)
-	{
-		if (initialSize > 0)
-		{
-			dinamicArray = new T[initialSize];
-		}
-		else
-		{
-			dinamicArray = nullptr;
-		}
-	}
-	~customVector()
-	{
-		delete[] dinamicArray;
-	}
-	customVector(const customVector& other)
-		:memory(other.memory)
-	{
-		dinamicArray = new int[memory];
-		for (int i = 0; i < memory; ++i)
-		{
-			dinamicArray[i] = other.dinamicArray[i];
-		}
-	}
-	customVector& operator =(const customVector& other)
-	{
-		if (this == &other)
-		{
-			return *this;
-		}
-		if(dinamicArray)
-		{
-			delete[] dinamicArray;
-		}
-		dinamicArray = nullptr;
-		memory = other.memory;
-		dinamicArray = new int[memory];
-		for (int i = 0; i < memory; ++i)
-		{
-			dinamicArray[i] = other.dinamicArray[i];
-		}
-		return *this;
-	}
-	int operator[](unsigned int index) const
-	{
-		if (dinamicArray && index < memory)
-		{
-			return dinamicArray[index];
-		}
-		else
-		{
-			std::cout << "Index out of bounds!" << std::endl;
-			return -1;
-		}
-	}
-	int& operator[](unsigned int index)
-	{
-		if (dinamicArray && index < memory)
-		{
-			return dinamicArray[index];
-		}
-		else
-		{
-			std::cout << "Index out of bounds!" << std::endl;
-		}
-	}
-	bool operator==(const customVector& other) const
-	{
-		if (memory != other.memory)
-		{
-			return false;
-		}
-		for (int i = 0; i < memory; ++i)
-		{
-			if (dinamicArray[i] != other.dinamicArray[i])
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-	bool operator!=(const customVector& other) const
-	{
-		return !(*this == other);
-	}
-
-	explicit operator bool() const
-	{
-		return memory > 0;
-	}
-
-	void resize(int newSize)
-	{
-		T* dinamicArrayTemp = nullptr;
-		if (newSize > 0)
-		{
-			dinamicArrayTemp = new T[newSize];
-			if (memory < newSize)
-			{
-				for (size_t v = 0; v < memory; ++v)
-				{
-					dinamicArrayTemp[v] = dinamicArray[v];
-				}
-			}
-			if (memory > newSize)
-			{
-				for (size_t v = 0; v < newSize; ++v)
-				{
-					dinamicArrayTemp[v] = dinamicArray[v];
-				}
-			}
-		}
-		else 
-		{
-			dinamicArrayTemp = nullptr;
-			memory = 0;
-		}
-		delete[] dinamicArray;
-		dinamicArray = nullptr;
-		dinamicArray = dinamicArrayTemp;
-		memory = newSize;
-	}
-
-	void setElement(size_t index, size_t value)
-	{
-		if (index >= 0 && index < memory && dinamicArray != nullptr)
-		{
-			dinamicArray[index] = value;
-		}
-		else
-		{
-			std::cout << "Index out of bounds!" << std::endl;
-		}
-	}
-	T getElement(size_t index) const
-	{
-		if (index >= 0 && index < memory && dinamicArray != nullptr)
-		{
-			return dinamicArray[index];
-		}
-		if (index < 0 || index >= memory)
-		{
-			throw std::out_of_range("Index out of bounds!");
-		}
-	}
-private:
-	int memory;
-	T* dinamicArray;
-};
 
 template<typename T, std::size_t N>
 class StaticArray
@@ -214,11 +59,14 @@ class StaticArray
 		T data_[N]{};
 };
 
+
+
+
 int main()
 {
 	int sizeOfVector = 0;
 	int input;
-	customVector<int> vec(sizeOfVector);
+	vector<int> vec(sizeOfVector);
 	while (true)
 	{
 		printMainMenu();
@@ -243,13 +91,28 @@ int main()
 			{
 				std::cout << "Memory allocated for vector: " << vec.getMemory() << std::endl;
 				std::cout << "Vector data: " << std::endl;
-				for (int i = 0; i < vec.getMemory(); ++i)
+				try
 				{
-					std::cout << vec.getElement(i) << std::endl;
+					for (int i = 0; i < vec.getMemory(); ++i)
+					{
+						std::cout << vec.getElement(i) << std::endl;
+					}
 				}
+				catch (const std::exception&)
+				{
+					std::cout << "Error occurred while accessing vector elements!" << std::endl;
+				}	
 				break;
 			}
 			case 3:
+			{
+				std::cout << "Enter the value to add to the vector: ";
+				int value;
+				std::cin >> value;
+				vec.push_back(value);
+				break;
+			}
+			case 4:
 			{
 				int input2;
 				printChangeDataMenu();
@@ -281,7 +144,7 @@ int main()
 				}
 				break;		
 			}
-			case 4:
+			case 5:
 			{
 				int input	;
 				std::cout << "Enter index of element to print: ";
@@ -298,7 +161,7 @@ int main()
 				}
 				break;
 			}
-			case 5:
+			case 6:
 			{
 				return 0;
 			}
