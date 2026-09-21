@@ -23,8 +23,76 @@ public:
 	~customVector()
 	{
 		delete[] dinamicArray;
+	}
+	customVector(const customVector& other)
+		:memory(other.memory)
+	{
+		dinamicArray = new int[memory];
+		for (int i = 0; i < memory; ++i)
+		{
+			dinamicArray[i] = other.dinamicArray[i];
+		}
+	}
+	customVector& operator =(const customVector& other)
+	{
+		if (this == &other)
+		{
+			return *this;
+		}
+		if(dinamicArray)
+		{
+			delete[] dinamicArray;
+		}
 		dinamicArray = nullptr;
-		memory = 0;
+		memory = other.memory;
+		dinamicArray = new int[memory];
+		for (int i = 0; i < memory; ++i)
+		{
+			dinamicArray[i] = other.dinamicArray[i];
+		}
+		return *this;
+	}
+	int operator[](unsigned int index) const
+	{
+		if (dinamicArray && index < memory)
+		{
+			return dinamicArray[index];
+		}
+		else
+		{
+			std::cout << "Index out of bounds!" << std::endl;
+			return -1;
+		}
+	}
+	int& operator[](unsigned int index)
+	{
+		if (dinamicArray && index < memory)
+		{
+			return dinamicArray[index];
+		}
+		else
+		{
+			std::cout << "Index out of bounds!" << std::endl;
+		}
+	}
+	bool operator==(const customVector& other) const
+	{
+		if (memory != other.memory)
+		{
+			return false;
+		}
+		for (int i = 0; i < memory; ++i)
+		{
+			if (dinamicArray[i] != other.dinamicArray[i])
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	bool operator!=(const customVector& other) const
+	{
+		return !(*this == other);
 	}
 
 	explicit operator bool() const
@@ -164,7 +232,7 @@ int main()
 				std::cin >> sizeOfVector;
 				vec.resize(sizeOfVector);
 				std::cout << "Enter the data to the vector: " << std::endl;
-				for (int i = 0; i < sizeOfVector; i++)
+				for (int i = 0; i < sizeOfVector; ++i)
 				{
 					std::cin >> data;
 					vec.setElement(i, data);
@@ -175,7 +243,7 @@ int main()
 			{
 				std::cout << "Memory allocated for vector: " << vec.getMemory() << std::endl;
 				std::cout << "Vector data: " << std::endl;
-				for (int i = 0; i < vec.getMemory(); i++)
+				for (int i = 0; i < vec.getMemory(); ++i)
 				{
 					std::cout << vec.getElement(i) << std::endl;
 				}
