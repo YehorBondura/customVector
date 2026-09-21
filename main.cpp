@@ -2,20 +2,22 @@
 #include <iostream>
 #include "menuOfVector.h"
 
+template <typename T>
 class customVector
 {
 public:
-
 	int getMemory() const { return memory; }
-	int setMemory(int newMemory) { memory = newMemory; }
 
-	customVector(int startmemory = 0)
+	customVector() : dinamicArray(nullptr), memory(0) {}
+	customVector(size_t initialSize) : memory (initialSize)
 	{
-		memory = startmemory;
-		dinamicArray = nullptr;
-		if (memory > 0)
+		if (initialSize > 0)
 		{
-			dinamicArray = new int[memory];
+			dinamicArray = new T[initialSize];
+		}
+		else
+		{
+			dinamicArray = nullptr;
 		}
 	}
 	~customVector()
@@ -92,28 +94,45 @@ public:
 	{
 		return !(*this == other);
 	}
+
+	explicit operator bool() const
+	{
+		return memory > 0;
+	}
+
 	void resize(int newSize)
 	{
-		memory = newSize;
-		int* dinamicArrayTemp;
+		T* dinamicArrayTemp = nullptr;
 		if (newSize > 0)
 		{
-			dinamicArrayTemp = new int[memory];
-			for (int v = 0; v < memory; ++v)
+			dinamicArrayTemp = new T[newSize];
+			if (memory < newSize)
 			{
-				dinamicArrayTemp[v] = dinamicArray[v];
+				for (size_t v = 0; v < memory; ++v)
+				{
+					dinamicArrayTemp[v] = dinamicArray[v];
+				}
+			}
+			if (memory > newSize)
+			{
+				for (size_t v = 0; v < newSize; ++v)
+				{
+					dinamicArrayTemp[v] = dinamicArray[v];
+				}
 			}
 		}
 		else 
 		{
 			dinamicArrayTemp = nullptr;
+			memory = 0;
 		}
 		delete[] dinamicArray;
 		dinamicArray = nullptr;
 		dinamicArray = dinamicArrayTemp;
+		memory = newSize;
 	}
 
-	void setElement(int index, int value)
+	void setElement(size_t index, size_t value)
 	{
 		if (index >= 0 && index < memory && dinamicArray != nullptr)
 		{
@@ -124,7 +143,7 @@ public:
 			std::cout << "Index out of bounds!" << std::endl;
 		}
 	}
-	int getElement(int index) const
+	T getElement(size_t index) const
 	{
 		if (index >= 0 && index < memory && dinamicArray != nullptr)
 		{
@@ -137,15 +156,69 @@ public:
 	}
 private:
 	int memory;
-	int* dinamicArray = nullptr;
+	T* dinamicArray;
 };
 
+template<typename T, std::size_t N>
+class StaticArray
+{
+	public:
+		StaticArray() : data_{} {}
+		T& operator[](std::size_t index)
+		{
+			if (index < N)
+			{
+				return data_[index];
+			}
+			else
+			{
+				throw std::out_of_range("Index out of bounds");
+			}
+		}
+		const T& operator[](std::size_t index) const
+		{
+			if (index < N)
+			{
+				return data_[index];
+			}
+			else
+			{
+				throw std::out_of_range("Index out of bounds");
+			}
+		}
+
+		void setElement(std::size_t index, const T& value)
+		{
+			if (index < N)
+			{
+				data_[index] = value;
+			}
+			else
+			{
+				std::cout << "Index out of bounds" << std::endl;
+			}
+		}
+
+		T getElement(std::size_t index) const
+		{
+			if (index < N)
+			{
+				return data_[index];
+			}
+			else
+			{
+				throw std::out_of_range("Index out of bounds");
+			}
+		}
+	private:
+		T data_[N]{};
+};
 
 int main()
 {
-	int sizeOfVector = 1;
+	int sizeOfVector = 0;
 	int input;
-	customVector vec(sizeOfVector);
+	customVector<int> vec(sizeOfVector);
 	while (true)
 	{
 		printMainMenu();
