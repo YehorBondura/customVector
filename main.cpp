@@ -130,10 +130,9 @@ public:
 		{
 			return dinamicArray[index];
 		}
-		else
+		if (index < 0 || index >= memory)
 		{
-			std::cout << "Index out of bounds!" << std::endl;
-			return -1;
+			throw std::out_of_range("Index out of bounds!");
 		}
 	}
 private:
@@ -210,6 +209,23 @@ int main()
 				break;		
 			}
 			case 4:
+			{
+				int input	;
+				std::cout << "Enter index of element to print: ";
+				std::cin >> input;
+				int index = input - 1;
+				try
+				{
+					int value = vec.getElement(index);
+					std::cout << "Element at index " << input << ": " << value << std::endl;
+				}
+				catch (const std::out_of_range& e)
+				{
+					std::cout << e.what() << std::endl;
+				}
+				break;
+			}
+			case 5:
 			{
 				return 0;
 			}
