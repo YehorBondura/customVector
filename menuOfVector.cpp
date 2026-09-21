@@ -7,9 +7,10 @@ void printMainMenu()
     std::cout << "\nChoose operation" << std::endl;
     std::cout << "1. Create vector" << std::endl;
     std::cout << "2. Show vector" << std::endl;
-	std::cout << "3. Change data of vector" << std::endl;
-	std::cout << "4. Print N element of Vector" << std::endl;
-    std::cout << "5. Exit" << std::endl;
+	std::cout << "3. Add element to vector" << std::endl;
+	std::cout << "4. Change data of vector" << std::endl;
+	std::cout << "5. Print N element of Vector" << std::endl;
+    std::cout << "6. Exit" << std::endl;
 }
 
 void printCreateVectorMenu()
